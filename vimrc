@@ -3,7 +3,7 @@
 "        3 TAGS
 "        4 DISPLAYING TEXT
 "        5 SYNTAX, HIGHLIGHTING AND SPELLING
-"        6 MULTIPLE WINDOWS
+"        6 BUFFERS, MULTIPLE WINDOWS
 "        7 MULTIPLE TAB PAGES
 "        8 TERMINAL
 "        9 USING THE MOUSE
@@ -35,7 +35,7 @@ let mapleader = ","
 
 " Required for Vundle
 filetype off
-set rtp+=~/vimfiles/bundle/vundle/
+set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 Bundle 'gmarik/vundle'
 
@@ -72,9 +72,10 @@ syntax enable
 set spelllang=en_us
 
 " ------------------------------------------------------------------------
-" MULTIPLE WINDOWS
+" BUFFERS & MULTIPLE WINDOWS
 " ------------------------------------------------------------------------
 set hidden                     " hidden buffers
+nnoremap <Leader><Tab> <C-^>
 
 " ------------------------------------------------------------------------
 " MULTIPLE TAB PAGES
