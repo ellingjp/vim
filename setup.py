@@ -6,7 +6,13 @@
     Should probably add the ability to let the user choose.
     
     This script assumes a working copy of Git.  For Windows users,
-    the git folder must be in the path."""
+    the git folder must be in the path.
+    
+    WARNING     Right now, this script blindly copies over the following
+                files:
+                    (Windows Only) %GitInstallDirectory%\cmd\curl.cmd
+                    $HOME/.vimrc, or on windows %Home%\_vimrc
+"""
 
 import os
 from subprocess import call
@@ -20,9 +26,11 @@ home = expanduser('~')
 vimdir = "unset"
 vundlerepo = "https://github.com/gmarik/vundle.git"
 curlfile = join(dirname(__file__), "curl.cmd")
+vimrc = join(dirname(__file__), "vimrc")
 
 # If running windows, try to copy curl.cmd into the git binaries folder
 if (os == windows):
+    print("Attempting to copy curl.cmd to git directory...")
     if isdir("C:\Program Files\Git"):
         copyfile(curlfile, "C:\Program Files\Git\cmd\curl.cmd")
     elif isdir("C:\Program Files (x86)\Git"):
@@ -53,3 +61,9 @@ if not isdir(vimdir + "/bundle/vundle"):
     call(['git', 'clone', vundlerepo, vimdir])
 else:
     print("Vundle repo already exists, not cloning")
+
+# copy vimrc
+if (os == windows)
+    copyfile(vimrc, home + "_vimrc")
+else
+    copyfile(vimrc, home + ".vimrc")
