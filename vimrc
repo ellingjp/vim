@@ -35,8 +35,16 @@ let mapleader = ","
 
 " Required for Vundle
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+
+" Ensure proper runtime path based on filetypes (.vim or vimfiles)
+if ( has('win16') || has('win32') || has('win64') )
+    set rtp+=~/vimfiles/bundle/vundle
+    call vundle#rc("$HOME/vimfiles/bundle")
+else
+    set rtp+=~/.vim/bundle/vundle
+    call vundle#rc()
+endif
+
 Bundle 'gmarik/vundle'
 
 " ------------------------------------------------------------------------
@@ -59,8 +67,18 @@ Bundle 'jellybeans.vim'
 " DISPLAYING TEXT
 " ------------------------------------------------------------------------
 nnoremap <silent> <leader>tl :set list!<CR>
-colorscheme jellybeans
-set number                     " line numbers, of course
+set number " line numbers, of course
+
+" function for checking if a colorscheme exists (is in the rtp)
+function! ColorschemeExists(color)
+    return !empty(globpath(&rtp, 'colors/' . a:color . '.vim'))
+endfunction
+
+if ColorschemeExists('jellybeans')
+    colorscheme jellybeans
+elseif ColorschemeExists('desert')
+    colorscheme desert
+endif
 
 " ------------------------------------------------------------------------
 " SYNTAX, HIGHLIGHTING AND SPELLING
