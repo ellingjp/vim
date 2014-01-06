@@ -63,7 +63,7 @@ else:
     print("Vundle repo already exists, not cloning")
 
 # copy vimrc
-if (os == windows)
+if (os == windows):
     copyfile(vimrc, home + "_vimrc")
-else
+else:
     copyfile(vimrc, home + ".vimrc")
