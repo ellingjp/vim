@@ -1,31 +1,32 @@
 "        1 IMPORTANT
-"        2 MOVING AROUND, SEARCHING AND PATTERNS
-"        3 TAGS
-"        4 DISPLAYING TEXT
-"        5 SYNTAX, HIGHLIGHTING AND SPELLING
-"        6 BUFFERS, MULTIPLE WINDOWS
-"        7 MULTIPLE TAB PAGES
-"        8 TERMINAL
-"        9 USING THE MOUSE
-"       10 GUI
-"       11 PRINTING
-"       12 MESSAGES AND INFO
-"       13 SELECTING TEXT
-"       14 EDITING TEXT
-"       15 TABS AND INDENTING
-"       16 FOLDING
-"       17 DIFF MODE
-"       18 MAPPING
-"       19 READING AND WRITING FILES
-"       20 THE SWAP FILE
-"       21 COMMAND LINE EDITING
-"       22 EXECUTING EXTERNAL COMMANDS
-"       23 RUNNING MAKE AND JUMPING TO ERRORS
-"       24 SYSTEM SPECIFIC
-"       25 LANGUAGE SPECIFIC
-"       26 MULTI-BYTE CHARACTERS
-"       27 VARIOUS
-"       28 VIMRC SPECIFIC
+"        2 BUNDLES
+"        3 MOVING AROUND, SEARCHING AND PATTERNS
+"        4 TAGS
+"        5 DISPLAYING TEXT
+"        6 SYNTAX, HIGHLIGHTING AND SPELLING
+"        7 BUFFERS, MULTIPLE WINDOWS
+"        8 MULTIPLE TAB PAGES
+"        9 TERMINAL
+"       10 USING THE MOUSE
+"       11 GUI
+"       12 PRINTING
+"       13 MESSAGES AND INFO
+"       14 SELECTING TEXT
+"       15 EDITING TEXT
+"       16 TABS AND INDENTING
+"       17 FOLDING
+"       18 DIFF MODE
+"       19 MAPPING
+"       20 READING AND WRITING FILES
+"       21 THE SWAP FILE
+"       22 COMMAND LINE EDITING
+"       23 EXECUTING EXTERNAL COMMANDS
+"       24 RUNNING MAKE AND JUMPING TO ERRORS
+"       25 SYSTEM SPECIFIC
+"       26 LANGUAGE SPECIFIC
+"       27 MULTI-BYTE CHARACTERS
+"       28 VARIOUS
+"       29 VIMRC SPECIFIC
 
 " ------------------------------------------------------------------------
 " IMPORTANT
@@ -37,23 +38,29 @@ let mapleader = ","
 filetype off
 
 " Ensure proper runtime path based on filetypes (.vim or vimfiles)
-if ( has('win16') || has('win32') || has('win64') )
+let vundleinstalled = 0
+if ( isdirectory(expand("~/vimfiles/bundle/vundle")) )
     set rtp+=~/vimfiles/bundle/vundle
     call vundle#rc("$HOME/vimfiles/bundle")
-else
+    let vundleinstalled = 1
+endif
+if ( isdirectory(expand("~/.vim/bundle/vundle")) ) 
     set rtp+=~/.vim/bundle/vundle
     call vundle#rc()
+    let vundleinstalled = 1
 endif
-
-Bundle 'gmarik/vundle'
 
 " ------------------------------------------------------------------------
 " BUNDLES
 " ------------------------------------------------------------------------
 
-Bundle 'Tabular'
-Bundle 'unimpaired.vim'
-Bundle 'jellybeans.vim'
+if (vundleinstalled)
+    Bundle 'gmarik/vundle'
+    Bundle 'Tabular'
+    Bundle 'unimpaired.vim'
+    Bundle 'jellybeans.vim'
+    Bundle 'surround.vim'
+endif
 
 " ------------------------------------------------------------------------
 " MOVING AROUND, SEARCHING AND PATTERNS
@@ -165,10 +172,18 @@ set softtabstop=4
 " READING AND WRITING FILES
 " ------------------------------------------------------------------------
 
+" Fixes overwriting symbolic links on windows
+if ( has("win32") )
+    set backupcopy=yes
+endif
+
 " ------------------------------------------------------------------------
 " THE SWAP FILE
 " ------------------------------------------------------------------------
-set directory=.,$TEMP          " fix swap file temp issue on windows
+
+if ( has("win32") )
+    set directory=.,$TEMP          " fix swap file temp issue on windows
+endif
 
 " ------------------------------------------------------------------------
 " COMMAND LINE EDITING
@@ -187,10 +202,6 @@ set history=200                " keep 200 lines of command line history
 " ------------------------------------------------------------------------
 " SYSTEM SPECIFIC
 " ------------------------------------------------------------------------
-" For some reason, working path doesn't default to $HOME on windows
-if has("win32")
-    cd $HOME
-endif
 
 " ------------------------------------------------------------------------
 " LANGUAGE SPECIFIC
@@ -221,5 +232,5 @@ endif
 nnoremap <silent> <leader>vw :e $MYVIMRC<CR>
 nnoremap <silent> <leader>vt :tabedit $MYVIMRC<CR>
 if has("autocmd")
-    autocmd! BufWritePost _vimrc source $MYVIMRC    " auto-source on write
+    autocmd! BufWritePost $MYVIMRC source $MYVIMRC    " auto-source on write
 endif
