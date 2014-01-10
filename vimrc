@@ -118,7 +118,7 @@ nnoremap <Leader><Tab> <C-^>
 " GUI
 " ------------------------------------------------------------------------
 if has("gui_running")
-    set guifont=Consolas:h11
+    " Special list characters (EOL, tab..) highlighting
     highlight NonText guibg    = 'NONE'
     highlight NonText guifg    = #707070
     highlight SpecialKey guibg = 'NONE'
