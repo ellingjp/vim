@@ -18,7 +18,6 @@ import os
 import os.path
 import subprocess
 import shutil
-import ctypes
 
 vundledir = "./vundlestuff"
 windows = "nt"
@@ -59,7 +58,7 @@ if (vimdir == "unset" or vimdir == "both"):
 # clone vundle if it doesn't already exist
 if not os.path.isdir(vimdir + "/bundle/vundle"):
     print("Vundle directory doesn't exist, cloning...")
-    subprocess.call(['git', 'clone', vundlerepo, vimdir])
+    subprocess.call(['git', 'clone', vundlerepo, vimdir+"/bundle/vundle"])
 else:
     print("Vundle repo already exists, not cloning")
 
