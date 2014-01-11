@@ -1,3 +1,17 @@
+" Author: 
+"    Jonathan Ellington
+" 
+" Description: 
+"    My vimrc file.  Should document better.
+" 
+" Mapping themes:
+"      Toggle type settings: <leader>t 
+"                            example: toggle search highlight, <leader>th
+"      Set type settings:    <leader>s
+"                            example: set tabstops (and related) <leader>ts
+"
+"   TABLE OF CONTENTS
+"
 "        1 IMPORTANT
 "        2 BUNDLES
 "        3 MOVING AROUND, SEARCHING AND PATTERNS
@@ -58,6 +72,7 @@ if (vundleinstalled)
     Bundle 'gmarik/vundle'
     Bundle 'Tabular'
     Bundle 'unimpaired.vim'
+    Bundle 'tComment'
     Bundle 'jellybeans.vim'
     Bundle 'surround.vim'
 endif
@@ -155,6 +170,17 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+
+nnoremap <leader>st :SetTabs<CR>
+command! -nargs=* SetTabs call SetTabVals()
+function! SetTabVals()
+    let l:tabstop = 1 * input('set tabstop = softtabstop = shiftwidth = ')
+    if l:tabstop > 0
+        let &l:sts = l:tabstop
+        let &l:ts = l:tabstop
+        let &l:sw = l:tabstop
+    endif
+endfunction
 
 " ------------------------------------------------------------------------
 " FOLDING
