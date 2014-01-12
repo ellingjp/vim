@@ -159,8 +159,6 @@ set visualbell                 " use visual bell instead of alarm
 " EDITING TEXT
 " ------------------------------------------------------------------------
 set backspace=indent,eol,start " backspace over crap
-nnoremap <Enter> o<Esc>
-nnoremap <S-Enter> O<Esc>
 
 " ------------------------------------------------------------------------
 " TABS AND INDENTING
