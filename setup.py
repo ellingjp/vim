@@ -1,20 +1,3 @@
-""" Setup script for Vim.  After running, Vim should have a working copy
-    of Vundle and be ready to go. 
-    
-    This script, by default will try to make some educated guesses
-    about where to clone Vundle files (ie, the user's vim plugin directory).
-    Should probably add the ability to let the user choose.
-    
-    This script assumes a working copy of Git.  For Windows users,
-    the git folder must be in the path.  Must use Windows Vista+ for Symlink
-    support.
-    
-    WARNING     Right now, this script blindly copies over the following
-                files:
-                    (Windows Only) %GitInstallDirectory%\cmd\curl.cmd
-                    $HOME/.vimrc, or on windows %Home%\_vimrc
-"""
-
 from __future__ import print_function
 import sys
 import os
@@ -26,7 +9,6 @@ import argparse
 def warning(*objs):
     print("WARNING: ", *objs, end='\n', file=sys.stderr)
 
-
 # argument parsing
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--verbose", help="specify verbosity", 
@@ -34,8 +16,8 @@ parser.add_argument("-v", "--verbose", help="specify verbosity",
 parser.add_argument("--vim-dir", help="specify vimfiles directory")
 parser.add_argument("--git-dir", help="(windows only) specify where to look                     for git files (ex C:\Program Files\Git)")
 parser.add_argument("--vimrc-path", help="specify vimrc path", default="~")
-parser.add_argument("--vimrc-copy", choices=["sym, copy, none"], 
-                    default="sym", help="specify how to copy the vimrc to                       vimdir (symlink, hard copy, or none)")
+parser.add_argument("--vimrc-copy", choices=["sym", "copy", "none"], 
+                    default="sym", help="specify how to copy the vimrc to                       vimdir (symlink, hard copy [overwrites any existing file                    !], or none)")
 parser.add_argument("--no-curl", action="store_true",
                     help="(windows only) don't try to install curl")
 parser.add_argument("--no-vundle", action="store_true", 
@@ -73,7 +55,7 @@ elif (system == windows):
     try:
         shutil.copyfile(curlfile, gdir)
     except PermissionError as err:
-        warning("curl not installed, insufficient permissions. try running as admin")
+        warning("curl not installed, insufficient permissions. try running as admin, or install manually.")
     except IOError as err:
         warning("curl not installed, io error:",err)
     else:
@@ -91,20 +73,41 @@ else:                                   # use OS to determine
         vimdir = home + "/vimfiles"
     else:
         vimdir = home + "/.vim"
+
 if args.verbose:
     print("vim directory set to", vimdir)
 
 # clone vundle if it doesn't already exist
-if (args.no_vundle is False)
+if (args.no_vundle):
+    print("--no-vundle chosen, skipping vundle clone...")
+else:
     if not os.path.isdir(vimdir + "/bundle/vundle"):
         print("Vundle directory doesn't exist, cloning...")
-        subprocess.call(['git', 'clone', vundlerepo, vimdir+"/bundle/vundle"])
+        subprocess.call(['git','clone',vundlerepo,vimdir+"/bundle/vundle"])
     else:
         print("Vundle repo already exists, not cloning")
 
 # copy vimrc
-print("Making symlink in home directory to vimrc file")
-if (system == windows):
-    os.symlink(vimrc, home + "/_vimrc")
+if (args.vimrc_path):
+    user_vimrc = args.vimrc_path
+elif (system == windows):
+    if args.verbose: print("windows system found, using ~/_vimrc")
+    user_vimrc = "/_vimrc"
 else:
-    os.symlink(vimrc, home + "/.vimrc")
+    if args.verbose: print("nonwindows system found, using ~/.vimrc")
+    user_vimrc = "/.vimrc"
+
+if (args.vimrc_copy == "sym"):
+    print("Making symlink in home directory to vimrc file")
+    try:
+        os.symlink(vimrc, home + "/.vimrc")
+    except OSError as err:
+        warning("OSError:", err)
+elif (args.vimrc_copy == "copy"):
+    print("Making copy in home directory of vimrc file")
+    try: 
+        shutil.copyfile(vimrc, user_vimrc)
+    except IOError as err:
+        warning("IO error:", err)
+else:
+    if args.verbose: print("Not copying vimrc")
