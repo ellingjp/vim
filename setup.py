@@ -14,53 +14,93 @@
                     (Windows Only) %GitInstallDirectory%\cmd\curl.cmd
                     $HOME/.vimrc, or on windows %Home%\_vimrc
 """
+
+from __future__ import print_function
+import sys
 import os
 import os.path
 import subprocess
 import shutil
+import argparse
 
-vundledir = "./vundlestuff"
-windows = "nt"
-system = os.name
-home = os.path.expanduser('~')
-vimdir = "unset"
+def warning(*objs):
+    print("WARNING: ", *objs, end='\n', file=sys.stderr)
+
+
+# argument parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("-v", "--verbose", help="specify verbosity", 
+                    action="store_true")
+parser.add_argument("--vim-dir", help="specify vimfiles directory")
+parser.add_argument("--git-dir", help="(windows only) specify where to look                     for git files (ex C:\Program Files\Git)")
+parser.add_argument("--vimrc-path", help="specify vimrc path", default="~")
+parser.add_argument("--vimrc-copy", choices=["sym, copy, none"], 
+                    default="sym", help="specify how to copy the vimrc to                       vimdir (symlink, hard copy, or none)")
+parser.add_argument("--no-curl", action="store_true",
+                    help="(windows only) don't try to install curl")
+parser.add_argument("--no-vundle", action="store_true", 
+                    help="don't try to clone vundle")
+args = parser.parse_args()
+
+# constants
 vundlerepo = "https://github.com/gmarik/vundle.git"
+windows = "nt"
 curlfile = os.path.join(os.path.dirname(os.path.abspath(__file__)), "curl.cmd")
 vimrc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vimrc")
 
+system = os.name
+home = os.path.expanduser('~')
+
 # If running windows, try to copy curl.cmd into the git binaries folder
-if (system == windows):
-    print("Attempting to copy curl.cmd to git directory...")
-    if os.path.isdir("C:\Program Files\Git"):
-        shutil.copyfile(curlfile, "C:\Program Files\Git\cmd\curl.cmd")
+if (args.no_curl):
+    if args.verbose: print("--no-curl specified.  Skipping curl install.")
+elif (system != windows):
+    if args.verbose: print("Not windows.  Skipping curl install.")
+elif (system == windows):
+    print("Trying to install curl.cmd...")
+    if (args.git_dir):
+        gdir = args.git_dir + "/cmd"
+    elif os.path.isdir("C:\Program Files\Git"):
+        gdir = "C:\Program Files\Git"
     elif os.path.isdir("C:\Program Files (x86)\Git"):
-        shutil.copyfile(curlfile, "C:\Program Files (x86)\Git\cmd\curl.cmd")
+        gdir = "C:\Program Files (x86)\Git"
     else:
-        print("Failed to copy curl.cmd.  Try running as admin.")
+        print("Could not find git installation directory!")
+    
+    if args.verbose:
+        print("Attempting to copy curl.cmd to", gdir)
 
-# check if either directory exists, if so use that:
-if os.path.isdir(home + "/vimfiles"):
+    try:
+        shutil.copyfile(curlfile, gdir)
+    except PermissionError as err:
+        warning("curl not installed, insufficient permissions. try running as admin")
+    except IOError as err:
+        warning("curl not installed, io error:",err)
+    else:
+        print("curl successfully installed.")
+
+# set vim directory
+if (args.vim_dir):                      # first check if user set vimdir
+    vimdir = args.vim_dir
+elif os.path.isdir(home + "/.vim"):     # check if .vim already exists
+    vimdir = home + "/.vim"
+elif os.path.isdir(home + "/vimfiles"): # check if /vimfiles exists
     vimdir = home + "/vimfiles"
-if os.path.isdir(home + "/.vim"):
-    if vimdir != "unset":
-        vimdir = "both"
-    else:
-        vimdir = home + "/.vim"
-
-# if vimdir hasn't been set, or both directories exist, use OS:
-if (vimdir == "unset" or vimdir == "both"):
-    # try to use vimfiles if on windows (will be overriden if .vim exists):
+else:                                   # use OS to determine
     if (system == windows):
         vimdir = home + "/vimfiles"
     else:
         vimdir = home + "/.vim"
+if args.verbose:
+    print("vim directory set to", vimdir)
 
 # clone vundle if it doesn't already exist
-if not os.path.isdir(vimdir + "/bundle/vundle"):
-    print("Vundle directory doesn't exist, cloning...")
-    subprocess.call(['git', 'clone', vundlerepo, vimdir+"/bundle/vundle"])
-else:
-    print("Vundle repo already exists, not cloning")
+if (args.no_vundle is False)
+    if not os.path.isdir(vimdir + "/bundle/vundle"):
+        print("Vundle directory doesn't exist, cloning...")
+        subprocess.call(['git', 'clone', vundlerepo, vimdir+"/bundle/vundle"])
+    else:
+        print("Vundle repo already exists, not cloning")
 
 # copy vimrc
 print("Making symlink in home directory to vimrc file")
