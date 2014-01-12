@@ -111,3 +111,5 @@ elif (args.vimrc_copy == "copy"):
         warning("IO error:", err)
 else:
     if args.verbose: print("Not copying vimrc")
+
+print("All finished!")
