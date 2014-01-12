@@ -75,6 +75,7 @@ if (vundleinstalled)
     Bundle 'tComment'
     Bundle 'jellybeans.vim'
     Bundle 'surround.vim'
+    Bundle 'ctrlp.vim'
 endif
 
 " ------------------------------------------------------------------------
