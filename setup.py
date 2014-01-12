@@ -61,31 +61,40 @@ elif (system == windows):
     else:
         print("curl successfully installed.")
 
+print()
+
 # set vim directory
 if (args.vim_dir):                      # first check if user set vimdir
     vimdir = args.vim_dir
 elif os.path.isdir(home + "/.vim"):     # check if .vim already exists
+    if args.verbose: print("found ~/.vim")
     vimdir = home + "/.vim"
 elif os.path.isdir(home + "/vimfiles"): # check if /vimfiles exists
+    if args.verbose: print("found ~/vimfiles")
     vimdir = home + "/vimfiles"
 else:                                   # use OS to determine
     if (system == windows):
+        if args.verbose: print("windows system, using ~/vimfiles")
         vimdir = home + "/vimfiles"
     else:
+        if args.verbose: print("nonwindows system, using ~/.vim")
         vimdir = home + "/.vim"
 
-if args.verbose:
-    print("vim directory set to", vimdir)
+print("vim directory set to", vimdir)
+
+print()
 
 # clone vundle if it doesn't already exist
 if (args.no_vundle):
     print("--no-vundle chosen, skipping vundle clone...")
 else:
     if not os.path.isdir(vimdir + "/bundle/vundle"):
-        print("Vundle directory doesn't exist, cloning...")
+        print("Cloning Vundle into", vimdir+"/bundle/vundle")
         subprocess.call(['git','clone',vundlerepo,vimdir+"/bundle/vundle"])
     else:
-        print("Vundle repo already exists, not cloning")
+        warning("Vundle repo already exists, not cloning")
+
+print()
 
 # copy vimrc
 if (args.vimrc_path):
