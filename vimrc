@@ -5,7 +5,7 @@
 "    My vimrc file.  Should document better.
 " 
 " Mapping themes:
-"      Toggle type settings: <leader>t 
+"      Toggle type settings: <leader>t
 "                            example: toggle search highlight, <leader>th
 "      Set type settings:    <leader>s
 "                            example: set tabstops (and related) <leader>ts
