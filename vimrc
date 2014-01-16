@@ -5,7 +5,7 @@
 "    My vimrc file.  Should document better.
 " 
 " Mapping themes:
-"      Toggle type settings: <leader>t 
+"      Toggle type settings: <leader>t
 "                            example: toggle search highlight, <leader>th
 "      Set type settings:    <leader>s
 "                            example: set tabstops (and related) <leader>ts
@@ -75,6 +75,7 @@ if (vundleinstalled)
     Bundle 'tComment'
     Bundle 'jellybeans.vim'
     Bundle 'surround.vim'
+    Bundle 'ctrlp.vim'
 endif
 
 " ------------------------------------------------------------------------
@@ -159,8 +160,6 @@ set visualbell                 " use visual bell instead of alarm
 " EDITING TEXT
 " ------------------------------------------------------------------------
 set backspace=indent,eol,start " backspace over crap
-nnoremap <Enter> o<Esc>
-nnoremap <S-Enter> O<Esc>
 
 " ------------------------------------------------------------------------
 " TABS AND INDENTING
