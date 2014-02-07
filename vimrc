@@ -5,8 +5,6 @@
 "    My vimrc file.  Should document better.
 " 
 " Mapping themes:
-"      Toggle type settings: <leader>t
-"                            example: toggle search highlight, <leader>th
 "      Set type settings:    <leader>s
 "                            example: set tabstops (and related) <leader>ts
 "
@@ -54,14 +52,14 @@ filetype off
 " Ensure proper runtime path based on filetypes (.vim or vimfiles)
 let vundleinstalled = 0
 if ( isdirectory(expand("~/vimfiles/bundle/vundle")) )
-    set rtp+=~/vimfiles/bundle/vundle
-    call vundle#rc("$HOME/vimfiles/bundle")
-    let vundleinstalled = 1
+  set rtp+=~/vimfiles/bundle/vundle
+  call vundle#rc("$HOME/vimfiles/bundle")
+  let vundleinstalled = 1
 endif
 if ( isdirectory(expand("~/.vim/bundle/vundle")) ) 
-    set rtp+=~/.vim/bundle/vundle
-    call vundle#rc()
-    let vundleinstalled = 1
+  set rtp+=~/.vim/bundle/vundle
+  call vundle#rc()
+  let vundleinstalled = 1
 endif
 
 " ------------------------------------------------------------------------
@@ -69,13 +67,22 @@ endif
 " ------------------------------------------------------------------------
 
 if (vundleinstalled)
-    Bundle 'gmarik/vundle'
-    Bundle 'Tabular'
-    Bundle 'unimpaired.vim'
-    Bundle 'tComment'
-    Bundle 'jellybeans.vim'
-    Bundle 'surround.vim'
-    Bundle 'ctrlp.vim'
+  Bundle 'gmarik/vundle'
+  Bundle 'Tabular'
+  Bundle 'tpope/vim-unimpaired'
+  Bundle 'tComment'
+  Bundle 'jellybeans.vim'
+  Bundle 'surround.vim'
+  Bundle 'ctrlp.vim'
+
+  let g:ctrlp_max_files = 0
+
+  Bundle 'tpope/vim-fugitive'
+  Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
+
+  " Vim-LaTeX config
+  let g:tex_flavor='latex'
+  let g:Tex_DefaultTargetFormat='pdf'
 endif
 
 " ------------------------------------------------------------------------
@@ -89,26 +96,23 @@ endif
 " ------------------------------------------------------------------------
 " DISPLAYING TEXT
 " ------------------------------------------------------------------------
-nnoremap <silent> <leader>tl :set list!<CR>
 set number " line numbers, of course
 
 " function for checking if a colorscheme exists (is in the rtp)
 function! ColorschemeExists(color)
-    return !empty(globpath(&rtp, 'colors/' . a:color . '.vim'))
+  return !empty(globpath(&rtp, 'colors/' . a:color . '.vim'))
 endfunction
 
 if ColorschemeExists('jellybeans')
-    colorscheme jellybeans
+  colorscheme jellybeans
 elseif ColorschemeExists('desert')
-    colorscheme desert
+  colorscheme desert
 endif
 
 " ------------------------------------------------------------------------
 " SYNTAX, HIGHLIGHTING AND SPELLING
 " ------------------------------------------------------------------------
 filetype plugin indent on
-nnoremap <silent> <leader>ts :set spell!<CR>
-nnoremap <silent> <leader>th :set hlsearch!<CR>
 syntax enable
 set spelllang=en_us
 
@@ -134,11 +138,13 @@ nnoremap <Leader><Tab> <C-^>
 " GUI
 " ------------------------------------------------------------------------
 if has("gui_running")
-    " Special list characters (EOL, tab..) highlighting
-    highlight NonText guibg    = 'NONE'
-    highlight NonText guifg    = #707070
-    highlight SpecialKey guibg = 'NONE'
-    highlight SpecialKey guifg = #707070
+  " Special list characters (EOL, tab..) highlighting
+  highlight NonText guibg    = 'NONE'
+  highlight NonText guifg    = #707070
+  highlight SpecialKey guibg = 'NONE'
+  highlight SpecialKey guifg = #707070
+
+  set guioptions-=T
 endif
 
 " ------------------------------------------------------------------------
@@ -166,19 +172,21 @@ set backspace=indent,eol,start " backspace over crap
 " ------------------------------------------------------------------------
 set sr                         " stop indents on shiftwidths (>,< cmds)
 set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+
+let vimrc_tabstop=2
+let &tabstop=vimrc_tabstop
+let &shiftwidth=vimrc_tabstop
+let &softtabstop=vimrc_tabstop
 
 nnoremap <leader>st :SetTabs<CR>
 command! -nargs=* SetTabs call SetTabVals()
 function! SetTabVals()
-    let l:tabstop = 1 * input('set tabstop = softtabstop = shiftwidth = ')
-    if l:tabstop > 0
-        let &l:sts = l:tabstop
-        let &l:ts = l:tabstop
-        let &l:sw = l:tabstop
-    endif
+  let l:tabstop = 1 * input('set tabstop = softtabstop = shiftwidth = ')
+  if l:tabstop > 0
+    let &l:sts = l:tabstop
+    let &l:ts = l:tabstop
+    let &l:sw = l:tabstop
+  endif
 endfunction
 
 " ------------------------------------------------------------------------
@@ -199,7 +207,7 @@ endfunction
 
 " Fixes overwriting symbolic links on windows
 if ( has("win32") )
-    set backupcopy=yes
+  set backupcopy=yes
 endif
 
 " ------------------------------------------------------------------------
@@ -207,7 +215,7 @@ endif
 " ------------------------------------------------------------------------
 
 if ( has("win32") )
-    set directory=.,$TEMP          " fix swap file temp issue on windows
+  set directory=.,$TEMP          " fix swap file temp issue on windows
 endif
 
 " ------------------------------------------------------------------------
@@ -227,6 +235,9 @@ set history=200                " keep 200 lines of command line history
 " ------------------------------------------------------------------------
 " SYSTEM SPECIFIC
 " ------------------------------------------------------------------------
+if ( has('win32') || has('win64') )
+  set shellslash
+endif
 
 " ------------------------------------------------------------------------
 " LANGUAGE SPECIFIC
@@ -237,14 +248,14 @@ set history=200                " keep 200 lines of command line history
 " ------------------------------------------------------------------------
 
 if has("multi_byte")
-    if &termencoding == ""
-        let &termencoding = &encoding
-    endif
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
 
-    set encoding=utf-8           " better default than latin1
-    setglobal fileencoding=utf-8 " file encoding for writing new files
+  set encoding=utf-8           " better default than latin1
+  setglobal fileencoding=utf-8 " file encoding for writing new files
 
-    set listchars=tab:▸\ ,eol:¬  " cool characters for listing tabs & eol
+  set listchars=tab:▸\ ,eol:¬  " cool characters for listing tabs & eol
 endif
 
 " ------------------------------------------------------------------------
@@ -257,5 +268,5 @@ endif
 nnoremap <silent> <leader>vw :e $MYVIMRC<CR>
 nnoremap <silent> <leader>vt :tabedit $MYVIMRC<CR>
 if has("autocmd")
-    autocmd! BufWritePost $MYVIMRC source $MYVIMRC    " auto-source on write
+  autocmd! BufWritePost $MYVIMRC source $MYVIMRC    " auto-source on write
 endif
