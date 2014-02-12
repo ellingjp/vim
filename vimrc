@@ -5,9 +5,7 @@
 "    My vimrc file.  Should document better.
 " 
 " Mapping themes:
-"      Set type settings:    <leader>s
-"                            example: set tabstops (and related) <leader>ts
-"
+
 "   TABLE OF CONTENTS
 "
 "        1 IMPORTANT
@@ -44,7 +42,10 @@
 " IMPORTANT
 " ------------------------------------------------------------------------
 set nocompatible
+
+" Swap mapleader and comma
 let mapleader = ","
+noremap \ ,
 
 " Required for Vundle
 filetype off
