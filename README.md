@@ -6,7 +6,7 @@ Holds my vimrc.
 Installation
 
 Unix-like:
-1. ln -s vimrc ~/.vimrc
+1. ln -s ~/.vimrc vimrc
 2. Open vim, run :BundleInstall
 
 Windows Vista+:
