@@ -1,14 +1,15 @@
 vim
 ===
 
-Repository for my vim configuration, mainly vimrc.
-Requires Windows Vista+ or Unix
+Holds my vimrc.
 
-To install:
-    git clone https://github.com/ellingjp/vim.git path-to-temp-directory
-    run setup.py
-    open vim, run :BundleInstall
+Installation
 
-setup.py assumes an installation of msysgit as you might obtain from git-scm.com.  On Windows, the location of Git should be added to the PATH.  If this wasn't selected during the installation of Git, adding something like C:\Program Files (x86)\Git\cmd to your path should work.
+Unix-like:
+1. ln -s vimrc ~/.vimrc
+2. Open vim, run :BundleInstall
 
-WARNING: setup.py will blindly copy over your vimrc file.  
+Windows Vista+:
+You must have admin privileges and curl installed to the path (for Vundle).
+1. mklink /j "C:\path\to\_vimrc" "vimrc"
+2. Open vim, run :BundleInstall
