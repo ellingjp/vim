@@ -52,14 +52,14 @@ filetype off
 
 " Ensure proper runtime path based on filetypes (.vim or vimfiles)
 let vundleinstalled = 0
-if ( isdirectory(expand("~/vimfiles/bundle/vundle")) )
-  set rtp+=~/vimfiles/bundle/vundle
-  call vundle#rc("$HOME/vimfiles/bundle")
+if ( isdirectory(expand("~/vimfiles/bundle/Vundle.vim")) )
+  set rtp+=~/vimfiles/bundle/Vundle.vim
+  call vundle#begin("$HOME/vimfiles/bundle")
   let vundleinstalled = 1
 endif
-if ( isdirectory(expand("~/.vim/bundle/vundle")) ) 
-  set rtp+=~/.vim/bundle/vundle
-  call vundle#rc()
+if ( isdirectory(expand("~/.vim/bundle/Vundle.vim")) ) 
+  set rtp+=~/.vim/bundle/Vundle.vim
+  call vundle#begin()
   let vundleinstalled = 1
 endif
 
@@ -68,22 +68,24 @@ endif
 " ------------------------------------------------------------------------
 
 if (vundleinstalled)
-  Bundle 'gmarik/vundle'
-  Bundle 'Tabular'
-  Bundle 'tpope/vim-unimpaired'
-  Bundle 'tComment'
-  Bundle 'jellybeans.vim'
-  Bundle 'surround.vim'
-  Bundle 'ctrlp.vim'
+  Plugin 'gmarik/Vundle.vim'
+  Plugin 'Tabular'
+  Plugin 'tpope/vim-unimpaired'
+  Plugin 'tComment'
+  Plugin 'jellybeans.vim'
+  Plugin 'surround.vim'
+  Plugin 'ctrlp.vim'
 
   let g:ctrlp_max_files = 0
 
-  Bundle 'tpope/vim-fugitive'
-  Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
+  Plugin 'tpope/vim-fugitive'
+  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex'
 
   " Vim-LaTeX config
   let g:tex_flavor='latex'
   let g:Tex_DefaultTargetFormat='pdf'
+
+  call vundle#end()
 endif
 
 " ------------------------------------------------------------------------
