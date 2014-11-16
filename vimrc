@@ -63,18 +63,21 @@ if ( isdirectory(expand("~/.vim/bundle/Vundle.vim")) )
   let vundleinstalled = 1
 endif
 
+let g:vundle_default_git_proto = 'git'
+
 " ------------------------------------------------------------------------
 " BUNDLES
 " ------------------------------------------------------------------------
 
 if (vundleinstalled)
   Plugin 'gmarik/Vundle.vim'
-  Plugin 'Tabular'
+  Plugin 'godlygeek/tabular'
   Plugin 'tpope/vim-unimpaired'
   Plugin 'tComment'
   Plugin 'jellybeans.vim'
   Plugin 'surround.vim'
   Plugin 'ctrlp.vim'
+  Plugin 'verilog_systemverilog.vim'
 
   let g:ctrlp_max_files = 0
 
@@ -91,8 +94,11 @@ endif
 " ------------------------------------------------------------------------
 " MOVING AROUND, SEARCHING AND PATTERNS
 " ------------------------------------------------------------------------
-set ignorecase
 set smartcase
+set hls
+nnoremap <C-l> <C-l>:nohls<CR>
+nnoremap <leader>st :SetTabs<CR>
+set tags=./tags;
 
 " ------------------------------------------------------------------------
 " TAGS
@@ -120,12 +126,15 @@ endif
 filetype plugin indent on
 syntax enable
 set spelllang=en_us
+set ve=all
 
 " ------------------------------------------------------------------------
 " BUFFERS & MULTIPLE WINDOWS
 " ------------------------------------------------------------------------
 set hidden                     " hidden buffers
 nnoremap <Leader><Tab> <C-^>
+nnoremap <Leader>b :CtrlPBuffer<CR>
+let g:ctrlp_root_markers = ['irig_top.v']
 
 " ------------------------------------------------------------------------
 " MULTIPLE TAB PAGES
@@ -162,6 +171,7 @@ endif
 set ruler                      " show the cursor position all the time
 set showcmd                    " display incomplete commands in status line
 set visualbell                 " use visual bell instead of alarm
+set statusline+=%F             " full filename in statusline
 
 " ------------------------------------------------------------------------
 " SELECTING TEXT
@@ -177,6 +187,7 @@ set backspace=indent,eol,start " backspace over crap
 " ------------------------------------------------------------------------
 set sr                         " stop indents on shiftwidths (>,< cmds)
 set expandtab
+set smarttab
 
 let vimrc_tabstop=2
 let &tabstop=vimrc_tabstop
@@ -226,7 +237,7 @@ endif
 " ------------------------------------------------------------------------
 " COMMAND LINE EDITING
 " ------------------------------------------------------------------------
-nnoremap <Space> :
+noremap <Space> :
 set history=200                " keep 200 lines of command line history
 
 " ------------------------------------------------------------------------
@@ -272,6 +283,25 @@ endif
 " ------------------------------------------------------------------------
 nnoremap <silent> <leader>vw :e $MYVIMRC<CR>
 nnoremap <silent> <leader>vt :tabedit $MYVIMRC<CR>
-if has("autocmd")
+if has ( "autocmd")
   autocmd! BufWritePost $MYVIMRC source $MYVIMRC    " auto-source on write
 endif
+
+
+" ------------------------------------------------------------------------
+" VERILOG ALIGNMENT
+" ------------------------------------------------------------------------
+nnoremap <leader>ai vi( :AlignInstance <CR>
+nnoremap <leader>am vi( :AlignModule <CR>
+
+command! -range AlignModule <line1>,<line2>call AlignVerilogModule()
+function! AlignVerilogModule() range
+  execute a:firstline . "," . a:lastline . 'GTabularize /^\s\+\w\+,\=\s\+\zs\/\/'
+endfunction
+
+command! -range AlignInstance <line1>,<line2>call AlignVerilogInstance()
+function! AlignVerilogInstance() range
+  execute a:firstline . "," . a:lastline . 'GTabularize /^[^(]*\zs('
+  execute a:firstline . "," . a:lastline . 'GTabularize /^[^)]*\zs),\='
+  execute a:firstline . "," . a:lastline . 'GTabularize /(.*)\zs\/\/'
+endfunction
