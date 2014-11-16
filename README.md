@@ -1,7 +1,7 @@
 vim
 ===
 
-Holds my vimrc.
+Holds my vimrc. <br><br>
 
 Installation
 
