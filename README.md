@@ -1,15 +1,15 @@
 vim
 ===
 
-Holds my vimrc. <br><br>
+Holds my vimrc.
 
-Installation
+Installation<br>
 
-Unix-like:
-1. git clone https://github.com/ellingjp/vim.git ~/.vimrcrepo
-2. cd ~ && ln -s ./.vimrcrepo/vimrc ~/.vimrc
-3. git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-4. Open vim, run :PluginInstall
+Unix-like:<br>
+1. git clone https://github.com/ellingjp/vim.git ~/.vimrcrepo<br>
+2. cd ~ && ln -s ./.vimrcrepo/vimrc ~/.vimrc<br>
+3. git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim<br>
+4. Open vim, run :PluginInstall<br>
 
 
 Windows Vista+:
