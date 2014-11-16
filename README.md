@@ -16,4 +16,4 @@ Windows Vista+:
 You must have admin privileges and curl installed to the path (for Vundle, see http://www.confusedbycode.com/curl/#downloads).
 The rest is the same, but use mklink instead of ln -s:
 
- mklink /j "C:\path\to\_vimrc" "vimrc"
+ mklink /h "_vimrc" "C:\path\to\repo\_vimrc"
