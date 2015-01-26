@@ -158,7 +158,7 @@ if has("gui_running")
   if has("win32")
     set guifont=Consolas:h14:cANSI
   else
-    set guifont=Courier_New:h12:cANSI
+    set guifont=Luxi_Mono:h12:cANSI
   endif
 endif
 
