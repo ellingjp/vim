@@ -74,19 +74,16 @@ if (vundleinstalled)
   Plugin 'godlygeek/tabular'
   Plugin 'tpope/vim-unimpaired'
   Plugin 'tComment'
-  Plugin 'jellybeans.vim'
   Plugin 'surround.vim'
-  Plugin 'ctrlp.vim'
   Plugin 'verilog_systemverilog.vim'
-
-  let g:ctrlp_max_files = 0
-
   Plugin 'tpope/vim-fugitive'
-  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex'
 
-  " Vim-LaTeX config
+  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex'
   let g:tex_flavor='latex'
   let g:Tex_DefaultTargetFormat='pdf'
+
+  Plugin 'ctrlp.vim'
+  let g:ctrlp_max_files = 0
 
   call vundle#end()
 endif
@@ -134,7 +131,6 @@ set ve=all
 set hidden                     " hidden buffers
 nnoremap <Leader><Tab> <C-^>
 nnoremap <Leader>b :CtrlPBuffer<CR>
-let g:ctrlp_root_markers = ['irig_top.v']
 
 " ------------------------------------------------------------------------
 " MULTIPLE TAB PAGES
@@ -159,6 +155,11 @@ if has("gui_running")
   highlight SpecialKey guifg = #707070
 
   set guioptions-=T
+  if has("win32")
+    set guifont=Consolas:h14:cANSI
+  else
+    set guifont=Courier_New:h12:cANSI
+  endif
 endif
 
 " ------------------------------------------------------------------------
@@ -222,7 +223,7 @@ endfunction
 " ------------------------------------------------------------------------
 
 " Fixes overwriting symbolic links on windows
-if ( has("win32") )
+if ( has("win32") || has("win64") )
   set backupcopy=yes
 endif
 
@@ -230,7 +231,7 @@ endif
 " THE SWAP FILE
 " ------------------------------------------------------------------------
 
-if ( has("win32") )
+if ( has("win32") || has("win64") )
   set directory=.,$TEMP          " fix swap file temp issue on windows
 endif
 
