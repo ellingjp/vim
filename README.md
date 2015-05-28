@@ -3,19 +3,15 @@ vim
 
 Holds my vimrc.
 
-Installation<br>
+Requires vim-plug by junegunn (https://github.com/junegunn/vim-plug)<br><br>
 
-Unix-like:
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+Install:
 <ol>
- <li>git clone https://github.com/ellingjp/vim.git ~/.vimrcrepo</li>
- <li>cd ~ && ln -s ./.vimrcrepo/vimrc ~/.vimrc</li>
- <li>git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim</li>
- <li>Open vim, run :PluginInstall</li>
+ <li>git clone https://github.com/ellingjp/vim.git ~/.local/src/vimrc</li>
+ <li>ln -s ~/.vimrcrepo/vimrc ~/.vimrc</li>
+ <li>curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</li>
+ <li>vim -c "PlugInstall | qall"</li>
 </ol>
-
-
-Windows Vista+:
-You must have admin privileges and curl installed to the path (for Vundle, see http://www.confusedbycode.com/curl/#downloads).
-The rest is the same, but use mklink instead of ln -s:
-
- mklink /h "_vimrc" "C:\path\to\repo\_vimrc"

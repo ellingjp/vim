@@ -1,200 +1,153 @@
 " Author: 
-"    Jonathan Ellington
+"   Jonathan Ellington, heavy inspiration from https://github.com/amix/vimrc
 " 
-" Description: 
-"    My vimrc file.  Should document better.
-" 
-" Mapping themes:
-
-"   TABLE OF CONTENTS
+" Requires:
+"   vim-plug plugin manager
 "
-"        1 IMPORTANT
-"        2 BUNDLES
-"        3 MOVING AROUND, SEARCHING AND PATTERNS
-"        4 TAGS
-"        5 DISPLAYING TEXT
-"        6 SYNTAX, HIGHLIGHTING AND SPELLING
-"        7 BUFFERS, MULTIPLE WINDOWS
-"        8 MULTIPLE TAB PAGES
-"        9 TERMINAL
-"       10 USING THE MOUSE
-"       11 GUI
-"       12 PRINTING
-"       13 MESSAGES AND INFO
-"       14 SELECTING TEXT
-"       15 EDITING TEXT
-"       16 TABS AND INDENTING
-"       17 FOLDING
-"       18 DIFF MODE
-"       19 MAPPING
-"       20 READING AND WRITING FILES
-"       21 THE SWAP FILE
-"       22 COMMAND LINE EDITING
-"       23 EXECUTING EXTERNAL COMMANDS
-"       24 RUNNING MAKE AND JUMPING TO ERRORS
-"       25 SYSTEM SPECIFIC
-"       26 LANGUAGE SPECIFIC
-"       27 MULTI-BYTE CHARACTERS
-"       28 VARIOUS
-"       29 VIMRC SPECIFIC
+"   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" 
+"
+" Sections:
+"   1. General
+"   2. Plugins
+"   3. User Interface
+"   4. Colors, fonts
+"   5. Text, tab, indent stuff
+"   6. Moving around, tabs, buffers
 
 " ------------------------------------------------------------------------
-" IMPORTANT
+" General
 " ------------------------------------------------------------------------
-set nocompatible
+
+" Filetype plugins
+filetype plugin on
+filetype indent on 
 
 " Swap mapleader and comma
 let mapleader = ","
-noremap \ ,
 
-" Required for Vundle
-filetype off
+" Map space to colon, for convenience 
+noremap <Space> :
 
-" Ensure proper runtime path based on filetypes (.vim or vimfiles)
-let vundleinstalled = 0
-if ( isdirectory(expand("~/vimfiles/bundle/Vundle.vim")) )
-  set rtp+=~/vimfiles/bundle/Vundle.vim
-  call vundle#begin("$HOME/vimfiles/bundle")
-  let vundleinstalled = 1
+" Keep 200 lines of command line history
+set history=200                
+
+" ------------------------------------------------------------------------
+" Plugins
+" ------------------------------------------------------------------------
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'tpope/vim-unimpaired'
+Plug 'tComment'
+Plug 'verilog_systemverilog.vim'
+Plug 'git://github.com/altercation/vim-colors-solarized.git'
+Plug 'ctrlp.vim'
+
+call plug#end()
+
+" ------------------------------------------------------------------------
+" User Interface
+" ------------------------------------------------------------------------
+
+" Turn on wildmenu (enhanced command-line completion)
+set wildmenu
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win32") || has("win64")
+  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+else
+  set wildignore+=.git\*,.hg\*,.svn\*
+end
+
+" Line numbers
+set number
+
+" Always show current position
+set ruler
+
+" Hidden buffers (can leave modified buffers)
+set hidden
+
+" Backspace over things it should backspace over
+set backspace=indent,eol,start 
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+if has('mouse')
+  set mouse=a
 endif
-if ( isdirectory(expand("~/.vim/bundle/Vundle.vim")) ) 
-  set rtp+=~/.vim/bundle/Vundle.vim
-  call vundle#begin()
-  let vundleinstalled = 1
-endif
 
-let g:vundle_default_git_proto = 'git'
-
-" ------------------------------------------------------------------------
-" BUNDLES
-" ------------------------------------------------------------------------
-
-if (vundleinstalled)
-  Plugin 'gmarik/Vundle.vim'
-  Plugin 'godlygeek/tabular'
-  Plugin 'tpope/vim-unimpaired'
-  Plugin 'tComment'
-  Plugin 'surround.vim'
-  Plugin 'verilog_systemverilog.vim'
-  Plugin 'tpope/vim-fugitive'
-
-  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex'
-  let g:tex_flavor='latex'
-  let g:Tex_DefaultTargetFormat='pdf'
-
-  Plugin 'ctrlp.vim'
-  let g:ctrlp_max_files = 0
-
-  call vundle#end()
-endif
-
-" ------------------------------------------------------------------------
-" MOVING AROUND, SEARCHING AND PATTERNS
-" ------------------------------------------------------------------------
+" Be smart about cases when searching
 set smartcase
-set hls
-nnoremap <C-l> <C-l>:nohls<CR>
-nnoremap <leader>st :SetTabs<CR>
-set tags=./tags;
+
+" Highlight search results
+set hlsearch
+
+" Don't redraw while executing macros (for performance)
+set lazyredraw
+
+" Show matching brackets, parens, curlys
+set showmatch
+
+" Lines before scrolling with j/k
+set scrolloff=4
+
+" Shorter timeout for keycode sequences
+set noerrorbells
+set novisualbell
+set timeoutlen=500
+
 
 " ------------------------------------------------------------------------
-" TAGS
+" Colors and Fonts
 " ------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------
-" DISPLAYING TEXT
-" ------------------------------------------------------------------------
-set number " line numbers, of course
-
-" function for checking if a colorscheme exists (is in the rtp)
-function! ColorschemeExists(color)
-  return !empty(globpath(&rtp, 'colors/' . a:color . '.vim'))
-endfunction
-
-if ColorschemeExists('jellybeans')
-  colorscheme jellybeans
-elseif ColorschemeExists('desert')
-  colorscheme desert
-endif
-
-" ------------------------------------------------------------------------
-" SYNTAX, HIGHLIGHTING AND SPELLING
-" ------------------------------------------------------------------------
-filetype plugin indent on
+" Enable syntax highlighting
 syntax enable
-set spelllang=en_us
-set ve=all
 
-" ------------------------------------------------------------------------
-" BUFFERS & MULTIPLE WINDOWS
-" ------------------------------------------------------------------------
-set hidden                     " hidden buffers
-nnoremap <Leader><Tab> <C-^>
-nnoremap <Leader>b :CtrlPBuffer<CR>
+" Use a dark background
+set background=dark
 
-" ------------------------------------------------------------------------
-" MULTIPLE TAB PAGES
-" ------------------------------------------------------------------------
+" Required for solarized to work
+set term=xterm-256color
 
-" ------------------------------------------------------------------------
-" TERMINAL
-" ------------------------------------------------------------------------
+try
+  colorscheme solarized
+catch
+endtry
 
-" ------------------------------------------------------------------------
-" USING THE MOUSE
-" ------------------------------------------------------------------------
-
-" ------------------------------------------------------------------------
-" GUI
-" ------------------------------------------------------------------------
+" Extra GUI stuff
 if has("gui_running")
-  " Special list characters (EOL, tab..) highlighting
-  highlight NonText guibg    = 'NONE'
-  highlight NonText guifg    = #707070
-  highlight SpecialKey guibg = 'NONE'
-  highlight SpecialKey guifg = #707070
-
+  set guioptions-=m
   set guioptions-=T
-  if has("win32")
-    set guifont=Consolas:h14:cANSI
-  else
-    set guifont=Luxi_Mono:h12:cANSI
-  endif
 endif
 
-" ------------------------------------------------------------------------
-" PRINTING
-" ------------------------------------------------------------------------
+" Use utf8 as standard encoding and en_us as standard language
+set encoding=utf8
+set spelllang=en_us
 
 " ------------------------------------------------------------------------
-" MESSAGES AND INFO
-" ------------------------------------------------------------------------
-set ruler                      " show the cursor position all the time
-set showcmd                    " display incomplete commands in status line
-set visualbell                 " use visual bell instead of alarm
-set statusline+=%F             " full filename in statusline
-
-" ------------------------------------------------------------------------
-" SELECTING TEXT
+" Text, tab, indent stuff
 " ------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------
-" EDITING TEXT
-" ------------------------------------------------------------------------
-set backspace=indent,eol,start " backspace over crap
-
-" ------------------------------------------------------------------------
-" TABS AND INDENTING
-" ------------------------------------------------------------------------
-set sr                         " stop indents on shiftwidths (>,< cmds)
+" Use spaces instead of tabs
 set expandtab
 set smarttab
 
-let vimrc_tabstop=2
-let &tabstop=vimrc_tabstop
-let &shiftwidth=vimrc_tabstop
-let &softtabstop=vimrc_tabstop
+" 1 tab = 4 spaces
+set shiftwidth=4
+set tabstop=4
 
+" Autoindent new lines, be smart about indenting
+set autoindent
+set smartindent
+
+" Stop indents on shiftwidths (>,< cmds)
+set shiftround                 
+
+" Easy way to set tab spacing
 nnoremap <leader>st :SetTabs<CR>
 command! -nargs=* SetTabs call SetTabVals()
 function! SetTabVals()
@@ -207,91 +160,56 @@ function! SetTabVals()
 endfunction
 
 " ------------------------------------------------------------------------
-" FOLDING
+" Moving around, tabs and buffers
 " ------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------
-" DIFF MODE
-" ------------------------------------------------------------------------
+" Easily change to previously used buffer
+nnoremap <Leader><Tab> <C-^>
 
-" ------------------------------------------------------------------------
-" MAPPING
-" ------------------------------------------------------------------------
+" Place cursor anywhere
+set virtualedit=all
 
-" ------------------------------------------------------------------------
-" READING AND WRITING FILES
-" ------------------------------------------------------------------------
+" Easy way to turn off highlighting
+map <silent> <leader><cr> :noh<cr>
 
-" Fixes overwriting symbolic links on windows
-if ( has("win32") || has("win64") )
-  set backupcopy=yes
-endif
+" Easy way to move around windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
-" ------------------------------------------------------------------------
-" THE SWAP FILE
-" ------------------------------------------------------------------------
+" Return to last edit position when opening files
+autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
 
-if ( has("win32") || has("win64") )
-  set directory=.,$TEMP          " fix swap file temp issue on windows
-endif
+" Remember info about open buffers on close
+set viminfo^=%
 
-" ------------------------------------------------------------------------
-" COMMAND LINE EDITING
-" ------------------------------------------------------------------------
-noremap <Space> :
-set history=200                " keep 200 lines of command line history
+" Display incomplete commands in the status line
+set showcmd
 
-" ------------------------------------------------------------------------
-" EXECUTING EXTERNAL COMMANDS
-" ------------------------------------------------------------------------
+" Always show statusline
+set laststatus=2
 
-" ------------------------------------------------------------------------
-" RUNNING MAKE AND JUMPING TO ERRORS
-" ------------------------------------------------------------------------
+" Full filename in statusline
+set statusline=%F              " full filename in statusline
 
-" ------------------------------------------------------------------------
-" SYSTEM SPECIFIC
-" ------------------------------------------------------------------------
-if ( has('win32') || has('win64') )
-  set shellslash
-endif
-
-" ------------------------------------------------------------------------
-" LANGUAGE SPECIFIC
-" ------------------------------------------------------------------------
-
-" ------------------------------------------------------------------------
-" MULTI-BYTE CHARACTERS
-" ------------------------------------------------------------------------
-
-if has("multi_byte")
-  if &termencoding == ""
-    let &termencoding = &encoding
-  endif
-
-  set encoding=utf-8           " better default than latin1
-  setglobal fileencoding=utf-8 " file encoding for writing new files
-
-  set listchars=tab:▸\ ,eol:¬  " cool characters for listing tabs & eol
-endif
-
-" ------------------------------------------------------------------------
-" VARIOUS
-" ------------------------------------------------------------------------
-
-" ------------------------------------------------------------------------
-" VIMRC SPECIFIC
-" ------------------------------------------------------------------------
+" Easily edit vimrc file
 nnoremap <silent> <leader>vw :e $MYVIMRC<CR>
 nnoremap <silent> <leader>vt :tabedit $MYVIMRC<CR>
+
+" Automatically source vimrc on write
 if has ( "autocmd")
   autocmd! BufWritePost $MYVIMRC source $MYVIMRC    " auto-source on write
 endif
 
-
 " ------------------------------------------------------------------------
 " VERILOG ALIGNMENT
 " ------------------------------------------------------------------------
+vnoremap <leader>a/    :Tab /\/\/<CR>
+vnoremap <leader>a<    :Tab /<=<CR>
 nnoremap <leader>ai vi( :AlignInstance <CR>
 nnoremap <leader>am vi( :AlignModule <CR>
 
