@@ -33,19 +33,35 @@ noremap <Space> :
 " Keep 200 lines of command line history
 set history=200                
 
+" First search directory of file, then cwd, then all the way up to root
+set tags=./tags;,.git/tags;
+
 " ------------------------------------------------------------------------
 " Plugins
 " ------------------------------------------------------------------------
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-unimpaired'
-Plug 'tComment'
-Plug 'verilog_systemverilog.vim'
 Plug 'git://github.com/altercation/vim-colors-solarized.git'
-Plug 'ctrlp.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'kien/ctrlp.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
+Plug 'valloric/youcompleteme'
+Plug 'vhda/verilog_systemverilog.vim'
+Plug 'majutsushi/tagbar'
+
+" Decommissioned
+" Plug 'godlygeek/tabular'
 
 call plug#end()
+
+" Tagbar
+nmap <Leader>t :TagbarToggle<CR>
+
+" vim-easy-align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 " ------------------------------------------------------------------------
 " User Interface
@@ -92,7 +108,7 @@ set lazyredraw
 set showmatch
 
 " Lines before scrolling with j/k
-set scrolloff=4
+set scrolloff=5
 
 " Shorter timeout for keycode sequences
 set noerrorbells
@@ -107,22 +123,18 @@ set timeoutlen=500
 " Enable syntax highlighting
 syntax enable
 
-" Use a dark background
-set background=dark
+" Extra GUI stuff
+if has("gui_running")
+  set guioptions-=m
+  set guioptions-=T
 
-" Required for solarized to work
-set term=xterm-256color
+endif
+
 
 try
   colorscheme solarized
 catch
 endtry
-
-" Extra GUI stuff
-if has("gui_running")
-  set guioptions-=m
-  set guioptions-=T
-endif
 
 " Use utf8 as standard encoding and en_us as standard language
 set encoding=utf8
@@ -137,12 +149,11 @@ set expandtab
 set smarttab
 
 " 1 tab = 4 spaces
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 
-" Autoindent new lines, be smart about indenting
+" Autoindent new lines
 set autoindent
-set smartindent
 
 " Stop indents on shiftwidths (>,< cmds)
 set shiftround                 
@@ -206,21 +217,5 @@ if has ( "autocmd")
 endif
 
 " ------------------------------------------------------------------------
-" VERILOG ALIGNMENT
+" Miscellaneous
 " ------------------------------------------------------------------------
-vnoremap <leader>a/    :Tab /\/\/<CR>
-vnoremap <leader>a<    :Tab /<=<CR>
-nnoremap <leader>ai vi( :AlignInstance <CR>
-nnoremap <leader>am vi( :AlignModule <CR>
-
-command! -range AlignModule <line1>,<line2>call AlignVerilogModule()
-function! AlignVerilogModule() range
-  execute a:firstline . "," . a:lastline . 'GTabularize /^\s\+\w\+,\=\s\+\zs\/\/'
-endfunction
-
-command! -range AlignInstance <line1>,<line2>call AlignVerilogInstance()
-function! AlignVerilogInstance() range
-  execute a:firstline . "," . a:lastline . 'GTabularize /^[^(]*\zs('
-  execute a:firstline . "," . a:lastline . 'GTabularize /^[^)]*\zs),\='
-  execute a:firstline . "," . a:lastline . 'GTabularize /(.*)\zs\/\/'
-endfunction
