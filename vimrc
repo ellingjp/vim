@@ -1,12 +1,12 @@
-" Author: 
+" Author:
 "   Jonathan Ellington, heavy inspiration from https://github.com/amix/vimrc
-" 
+"
 " Requires:
 "   vim-plug plugin manager
 "
 "   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-" 
+"
 "
 " Sections:
 "   1. General
@@ -22,12 +22,12 @@
 
 " Filetype plugins
 filetype plugin on
-filetype indent on 
+filetype indent on
 
 " Swap mapleader and comma
 let mapleader = ","
 
-" Map space to colon, for convenience 
+" Map space to colon, for convenience
 noremap <Space> :
 
 " Keep 200 lines of command line history
@@ -45,14 +45,17 @@ call plug#begin('~/.vim/plugged')
 Plug 'git://github.com/altercation/vim-colors-solarized.git'
 Plug 'junegunn/vim-easy-align'
 Plug 'kien/ctrlp.vim'
-Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'valloric/youcompleteme'
 Plug 'vhda/verilog_systemverilog.vim'
 Plug 'majutsushi/tagbar'
+Plug 'bling/vim-airline'
+Plug 'scrooloose/syntastic'
 
 " Decommissioned
 " Plug 'godlygeek/tabular'
+" Plug 'tomtom/tcomment_vim'
 
 call plug#end()
 
@@ -88,7 +91,7 @@ set ruler
 set hidden
 
 " Backspace over things it should backspace over
-set backspace=indent,eol,start 
+set backspace=indent,eol,start
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
@@ -130,6 +133,7 @@ if has("gui_running")
 
 endif
 
+set background=light
 
 try
   colorscheme solarized
@@ -156,7 +160,7 @@ set tabstop=2
 set autoindent
 
 " Stop indents on shiftwidths (>,< cmds)
-set shiftround                 
+set shiftround
 
 " Easy way to set tab spacing
 nnoremap <leader>st :SetTabs<CR>
